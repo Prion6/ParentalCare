@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/AntiFlashWhite"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/BrightGreek"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:text="Themes"
+            android:textColor="@color/AntiFlashWhite"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/options"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="right"
+            android:background="@android:drawable/ic_input_get"
+            android:backgroundTint="@color/AntiFlashWhite"
+            android:gravity="center"
+            android:padding="16dp" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listViewXML"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:padding="10dp">
+
+    </ListView>
+
+</LinearLayout>

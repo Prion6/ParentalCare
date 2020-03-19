@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">P3</string>
+    <string name="user_field">Name...</string>
+    <string name="password_field">Password...</string>
+    <string name="register">Register</string>
+    <string name="sing_in">Sing In</string>
+    <string name="channel_name">Notification</string>
+    <string name="channel_description">InactivityNotification</string>
+    <string name="contact_us">Need any help? Have any thoughts?\n Write us here...</string>
+    <string name="like">If you liked this app click here</string>
+</resources>
