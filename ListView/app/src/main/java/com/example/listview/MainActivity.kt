@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -33,29 +34,21 @@ class MainActivity : AppCompatActivity()
 
         singInBtn.setOnClickListener()
         {
-            CheckUser(userField.text.toString(),passwordField.text.toString())
+            CheckUser(userField.text.toString().trim().toLowerCase(),passwordField.text.toString().trim().toLowerCase())
             if(user != null)
             {
                 Toast.makeText(this,"Authentication Success",Toast.LENGTH_LONG).show();
                 val intent = Intent(applicationContext,MainScreen::class.java);
                 startActivity(intent);
             }
-            else
-            {
-                Toast.makeText(this, "Authentication Failed",Toast.LENGTH_LONG).show()
-            }
         }
 
         registerBtn.setOnClickListener()
         {
-            CreateUser(userField.text.toString(),passwordField.text.toString())
+            CreateUser(userField.text.toString().trim().toLowerCase(),passwordField.text.toString().trim().toLowerCase())
             if(user != null)
             {
                 Toast.makeText(this,"Success",Toast.LENGTH_LONG).show();
-            }
-            else
-            {
-                Toast.makeText(this,"Failed",Toast.LENGTH_LONG).show();
             }
         }
 
@@ -72,28 +65,46 @@ class MainActivity : AppCompatActivity()
         MainActivity.user = mAuth!!.getCurrentUser()
     }
 
-    fun CreateUser(email:String,password:String): Boolean
+    fun CreateUser(email:String,password:String)
     {
-        var bool = false;
+        Toast.makeText(
+            this@MainActivity,
+            email + " - " + password,
+            Toast.LENGTH_SHORT
+        ).show()
         mAuth!!.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener(this
-            ) {
-                bool = true;
-                MainActivity.user = mAuth!!.getCurrentUser();
+            .addOnCompleteListener(this
+            ) { task ->
+                if (!task.isSuccessful) {
+                    val e = task.exception as FirebaseAuthException
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Failed Registration: " + e.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else
+                {
+                    user = mAuth!!.getCurrentUser()
+                }
+
+                // ...
             }
-        return bool;
     }
 
-    fun CheckUser(email:String,password:String): Boolean
+    fun CheckUser(email:String,password:String)
     {
-        var bool = false;
         mAuth!!.signInWithEmailAndPassword(email, password)
-        .addOnSuccessListener(this
-        ) {
-            bool = true;
-            MainActivity.user = mAuth!!.getCurrentUser();
-        }
-        return bool;
+            .addOnCompleteListener(this
+            ) { task ->
+                if (!task.isSuccessful) {
+
+                }
+                else
+                {
+                    user = mAuth!!.getCurrentUser()
+                }
+            }
     }
 
 

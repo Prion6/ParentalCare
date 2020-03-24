@@ -149,12 +149,24 @@ public class MainScreen : AppCompatActivity()
 
     override fun onStart() {
         super.onStart()
-        notificationManager!!.cancel(1);
+        try {
+            notificationManager!!.cancel(1);
+        }
+        catch (e:Exception)
+        {
+            Log.i("Cancel Notification",e.printStackTrace().toString())
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        notificationManager!!.cancel(1);
+        try {
+            notificationManager!!.cancel(1);
+        }
+        catch (e:Exception)
+        {
+            Log.i("Cancel Notification",e.printStackTrace().toString())
+        }
     }
 
     override fun onPause() {
@@ -278,12 +290,45 @@ public class MainScreen : AppCompatActivity()
         }
     }
 
-    public inner class Notification_receiver: BroadcastReceiver()
+}
+
+public class Notification_receiver: BroadcastReceiver() {
+    override fun onReceive(context: Context?, intent: Intent?)
     {
-        override fun onReceive(context: Context?, intent: Intent?)
-        {
-            RingNotification();
+        val notificationManager = context!!.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager;
+
+        var notificationChannel: NotificationChannel? = null;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelName = context.getString(R.string.channel_name);
+            notificationChannel =
+                NotificationChannel(channelName, channelName, NotificationManager.IMPORTANCE_HIGH);
+            notificationChannel!!.description = context.getString(R.string.channel_description);
+            notificationChannel!!.setSound(
+                RingtoneManager.getDefaultUri(Notification.DEFAULT_SOUND),
+                null
+            );
+            notificationChannel!!.vibrationPattern = LongArray(4, { 250;250;250;250 });
+            notificationChannel!!.enableVibration(true);
+
+            notificationManager!!.createNotificationChannel((notificationChannel!!));
+
+            val myIntent = Intent(context, MainScreen::class.java);
+            val pIntent = PendingIntent.getActivity(context, 0, myIntent, 0);
+            var notification = Notification.Builder(context, context.getString(R.string.channel_name))
+                .setContentTitle("You have been away too long")
+                .setContentText("Your last connection was 24 hours ago")
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentIntent(pIntent)
+                .setSound(RingtoneManager.getDefaultUri(Notification.DEFAULT_SOUND))
+                .setAutoCancel(true)
+                .build();
+
+
+            notification!!.defaults = Notification.DEFAULT_ALL;
+            notification!!.audioStreamType = AudioManager.STREAM_ALARM;
+
+            notificationManager!!.notify(1,notification);
         }
     }
-
 }
